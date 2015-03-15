@@ -83,7 +83,6 @@ score.watch(function (players) {
 
   if (playersSum === 40) {
     duece.play();
-    endGame();
     startDuece();
   } else if((playersSum % 5) === 0 && playersSum !== 0) {
     switchService.play();
@@ -182,7 +181,6 @@ function dueceKeyupHandler(event) {
       score.two = "D";
     } else {
       win.play();
-      endDuece();
       startGame();
     }
     meta.one.lastTime = Date.now();
@@ -209,7 +207,6 @@ function dueceKeyupHandler(event) {
       score.one = "D";
     } else {
       win.play();
-      endDuece();
       startGame();
     }
     meta.two.lastTime = Date.now();
@@ -236,6 +233,7 @@ function dueceKeydownHandler(event) {
 }
 
 function startGame() {
+  endDuece();
   score.zeros();
   document.addEventListener('keydown', gameKeydownHandler, false);
   document.addEventListener('keyup', gameKeyupHandler, false);
@@ -247,6 +245,7 @@ function endGame() {
 }
 
 function startDuece() {
+  endGame();
   score.dueces();
   document.addEventListener('keydown', dueceKeydownHandler, false);
   document.addEventListener('keyup', dueceKeyupHandler, false);
