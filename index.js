@@ -1,12 +1,23 @@
+// Constants
+var KEY_1 = 49;
+var KEY_V = 86;
+var PLAYER1KEYCODE = KEY_1;
+var PLAYER2KEYCODE = KEY_V;
+var PLAYER1COLOR = 'red';
+var PLAYER2COLOR = 'blue';
+
+// Audio Clips
 var switchService = new Audio('switch.mp3');
 var ping = new Audio('ping.mp3');
 var win = new Audio('win.mp3');
-var duece = new Audio('duece.mp3');
+var deuce = new Audio('deuce.mp3');
 
+// Slice Function
 function slice(array) {
   return Array.prototype.slice.call(array);
 }
 
+// Score Keeper
 function Score() {
   if (!(this instanceof Score)) {
     return new Score();
@@ -48,11 +59,15 @@ Score.prototype.zeros = function() {
   this.callback(this._score);
 };
 
-Score.prototype.dueces = function() {
+Score.prototype.deuces = function() {
   this._score = {one: "D", two: "D"};
   this.callback(this._score);
 };
 
+// App Vars
+var score = Score();
+var player1 = document.getElementById('player-one');
+var player2 = document.getElementById('player-two');
 var meta = {
   one: {
     resetCounter: 0,
@@ -65,36 +80,35 @@ var meta = {
     lastTime: null
   }
 };
-var score = Score();
-var players = slice(document.querySelectorAll('.player div'));
-var player1 = players[0];
-var player2 = players[1];
-var player1KeyCode = 49;
-var player2KeyCode = 86;
 
-function render(players) {
-  player1.innerHTML = players.one;
-  player2.innerHTML = players.two;
-}
-
-score.watch(function (players) {
-  var playersSum = players.one + players.two;
-  render(players);
-
-  if (playersSum === 40) {
-    duece.play();
-    startDuece();
-  } else if((playersSum % 5) === 0 && playersSum !== 0) {
-    switchService.play();
-  }
-
-});
-
+// Calculate and set the font-size
 slice(document.querySelectorAll('.player')).map(function (player) {
   var fontSize = player.offsetHeight / 2;
   player.style.fontSize = fontSize + 'px';
 });
 
+// Render the score to the page
+function render(players) {
+  player1.innerHTML = players.one;
+  player2.innerHTML = players.two;
+}
+
+// Watch the score for changes
+score.watch(function (players) {
+  var playersSum = players.one + players.two;
+
+  render(players);
+
+  if (playersSum === 40) {
+    deuce.play();
+    startDeuce();
+  } else if((playersSum % 5) === 0 && playersSum !== 0) {
+    switchService.play();
+  }
+});
+
+// Flash the background-color when a player scores
+// The color can be either red or blue
 function flash(color) {
   document.body.className += ' ' + color;
   setTimeout(function () {
@@ -102,61 +116,60 @@ function flash(color) {
   }, 250);
 }
 
+// Game Handlers
 function gameKeyupHandler(event) {
+  var newPlayer1Score;
+  var newPlayer2Score;
   // player 1
-      //-----------------
-  if((Date.now() - meta.one.lastTime) < 500) {
+  //-----------------
+  if ((Date.now() - meta.one.lastTime) < 500) {
     // do nothing: prevents them hitting it twice on accident
-  }
-  else if(event.keyCode === player1KeyCode && !meta.one.reset) {
+  } else if (event.keyCode === PLAYER1KEYCODE && !meta.one.reset) {
     ping.play();
-    flash('red');
     score.one += 1;
     if(score.one > 20) {
+    flash(PLAYER1COLOR);
       score.one = 0;
     }
     meta.one.lastTime = Date.now();
     meta.one.resetCounter = 0;
-  }
-  else if(meta.one.reset) {
+  } else if (meta.one.reset) {
     meta.one.reset = false;
     meta.one.resetCounter = 0;
   }
 
   // player 2
   //-----------------
-  if((Date.now() - meta.two.lastTime) < 500) {
+  if ((Date.now() - meta.two.lastTime) < 500) {
     // do nothing: prevents them hitting it twice on accident
-  }
-  else if(event.keyCode === player2KeyCode && !meta.two.reset) {
+  } else if (event.keyCode === PLAYER2KEYCODE && !meta.two.reset) {
     ping.play();
-    flash('blue');
     score.two += 1;
     if(score.two > 20) {
+    flash(PLAYER2COLOR);
       score.two = 0;
     }
     meta.two.lastTime = Date.now();
     meta.two.resetCounter = 0;
-  }
-  else if(meta.two.reset) {
+  } else if (meta.two.reset) {
     meta.two.reset = false;
     meta.two.resetCounter = 0;
   }
 }
 
 function gameKeydownHandler(event) {
-  if(event.keyCode === player1KeyCode) {
+  if (event.keyCode === PLAYER1KEYCODE) {
     meta.one.resetCounter++;
-    if(meta.one.resetCounter === 10) {
+    if (meta.one.resetCounter === 10) {
       ping.play();
       meta.one.reset = true;
       score.one = 0;
     }
   }
 
-  if(event.keyCode === player2KeyCode) {
+  if (event.keyCode === PLAYER2KEYCODE) {
     meta.two.resetCounter++;
-    if(meta.two.resetCounter === 10) {
+    if (meta.two.resetCounter === 10) {
       ping.play();
       meta.two.reset = true;
       score.two = 0;
@@ -164,16 +177,16 @@ function gameKeydownHandler(event) {
   }
 }
 
-function dueceKeyupHandler(event) {
+// Deuce Handlers
+function deuceKeyupHandler(event) {
   // player 1
   //-----------------
-  if((Date.now() - meta.one.lastTime) < 500) {
+  if ((Date.now() - meta.one.lastTime) < 500) {
     // do nothing: prevents them hitting it twice on accident
-  }
-  else if(event.keyCode === player1KeyCode && !meta.one.reset) {
+  } else if (event.keyCode === PLAYER1KEYCODE && !meta.one.reset) {
     ping.play();
-    flash('red');
-    if(score.one === "D" && score.two === "D") {
+    flash(PLAYER1COLOR);
+    if (score.one === "D" && score.two === "D") {
       ping.play();
       score.one = "A";
     } else if (score.one === "D" && score.two === "A") {
@@ -185,21 +198,19 @@ function dueceKeyupHandler(event) {
     }
     meta.one.lastTime = Date.now();
     meta.one.resetCounter = 0;
-  }
-  else if(meta.one.reset) {
+  } else if (meta.one.reset) {
     meta.one.reset = false;
     meta.one.resetCounter = 0;
   }
 
   // player 2
   //-----------------
-  if((Date.now() - meta.two.lastTime) < 500) {
+  if ((Date.now() - meta.two.lastTime) < 500) {
     // do nothing: prevents them hitting it twice on accident
-  }
-  else if(event.keyCode === player2KeyCode && !meta.two.reset) {
+  } else if (event.keyCode === PLAYER2KEYCODE && !meta.two.reset) {
     ping.play();
-    flash('blue');
-    if(score.two === "D" && score.one === "D") {
+    flash(PLAYER2COLOR);
+    if (score.two === "D" && score.one === "D") {
       ping.play();
       score.two = "A";
     } else if (score.two === "D" && score.one === "A") {
@@ -211,29 +222,29 @@ function dueceKeyupHandler(event) {
     }
     meta.two.lastTime = Date.now();
     meta.two.resetCounter = 0;
-  }
-  else if(meta.two.reset) {
+  } else if (meta.two.reset) {
     meta.two.reset = false;
     meta.two.resetCounter = 0;
   }
 }
 
-function dueceKeydownHandler(event) {
-  if(event.keyCode === player1KeyCode || event.keyCode === player2KeyCode) {
+function deuceKeydownHandler(event) {
+  if (event.keyCode === PLAYER1KEYCODE || event.keyCode === PLAYER2KEYCODE) {
     meta.one.resetCounter++;
     meta.two.resetCounter++;
-    if(meta.one.resetCounter === 10 || meta.two.resetCounter === 10) {
+    if (meta.one.resetCounter === 10 || meta.two.resetCounter === 10) {
       ping.play();
       meta.one.reset = true;
       meta.two.reset = true;
-      endDuece();
+      endDeuce();
       startGame();
     }
   }
 }
 
+// Game Event Listeners
 function startGame() {
-  endDuece();
+  endDeuce();
   score.zeros();
   document.addEventListener('keydown', gameKeydownHandler, false);
   document.addEventListener('keyup', gameKeyupHandler, false);
@@ -244,16 +255,18 @@ function endGame() {
   document.removeEventListener('keyup', gameKeyupHandler, false);
 }
 
-function startDuece() {
+// Deuce Event Listeners
+function startDeuce() {
   endGame();
-  score.dueces();
-  document.addEventListener('keydown', dueceKeydownHandler, false);
-  document.addEventListener('keyup', dueceKeyupHandler, false);
+  score.deuces();
+  document.addEventListener('keydown', deuceKeydownHandler, false);
+  document.addEventListener('keyup', deuceKeyupHandler, false);
 }
 
-function endDuece() {
-  document.removeEventListener('keydown', dueceKeydownHandler, false);
-  document.removeEventListener('keyup', dueceKeyupHandler, false);
+function endDeuce() {
+  document.removeEventListener('keydown', deuceKeydownHandler, false);
+  document.removeEventListener('keyup', deuceKeyupHandler, false);
 }
 
+// Start the Game!!
 startGame();
