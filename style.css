@@ -1,55 +1,46 @@
+/* apply a natural box layout model to all elements, but allowing components to change */
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 body, html {
+  width: 100%;
   height: 100%;
 }
 
 body {
   background-color: #000;
+  font-weight: 400;
+  font-family: sans-serif;
   color: #fff;
 }
 
-h1 {
-  font-size: 20em;
-}
-
-#flash1 {
-  background-color: red;
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-}
-
-#flash2 {
+body.blue {
   background-color: blue;
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
+}
+
+body.red {
+  background-color: red;
+}
+
+.player {
+  float: left;
   height: 100%;
-  width: 100%;
-}
-
-.dot {
-  border-right: 4px dotted white;
-}
-
-.table {
-  display: table;
-  margin-bottom: 0;
-  height: 100%;
-  position: relative;
-  z-index: 2;
-}
-
-.row {
-  display: table-row;
-}
-
-.cell {
-  display: table-cell;
-  vertical-align: middle;
+  width: 50%;
   text-align: center;
-  width: 50% !important;
+}
+
+.player div {
+  display: inline-block;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.player:first-child {
+  border-right: 4px dotted white;
 }

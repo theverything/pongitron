@@ -1,26 +1,17 @@
 <!DOCTYPE html>
-<html ng-app="app">
+<html>
   <head>
     <title>Pongitron</title>
-    <link rel="stylesheet" type="text/css" href="components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <script src="components/angular/angular.min.js"></script>
-    <script src="components/ngFitText/src/ng-FitText.js"></script>
-    <script src="script.js"></script>
   </head>
-  <body ng-controller="MainController">
-    <div id="flash1" ng-show="flash1"></div>
-    <div id="flash2" ng-show="flash2"></div>
-    <div class="table">
-      <div class="row">
-        <div class="cell dot">
-          <h1 data-fittext data-fittext-max="500">{{player.two}}</h1>
-        </div>
-        <div class="cell">
-          <h1 data-fittext data-fittext-max="500">{{player.one}}</h1>
-        </div>
-      </div>
+  <body>
+    <div class="player">
+      <div id='player-one'>0</div>
     </div>
+    <div class="player">
+      <div id='player-two'>0</div>
+    </div>
+    <script src="index.js"></script>
   </body>
 </html>
