@@ -126,11 +126,15 @@ function gameKeyupHandler(event) {
     // do nothing: prevents them hitting it twice on accident
   } else if (event.keyCode === PLAYER1KEYCODE && !meta.one.reset) {
     ping.play();
-    score.one += 1;
-    if(score.one > 20) {
     flash(PLAYER1COLOR);
+
+    newPlayer1Score = score.one + 1;
+    if (newPlayer1Score > 20) {
       score.one = 0;
+    } else {
+      score.one = newPlayer1Score;
     }
+
     meta.one.lastTime = Date.now();
     meta.one.resetCounter = 0;
   } else if (meta.one.reset) {
@@ -144,11 +148,15 @@ function gameKeyupHandler(event) {
     // do nothing: prevents them hitting it twice on accident
   } else if (event.keyCode === PLAYER2KEYCODE && !meta.two.reset) {
     ping.play();
-    score.two += 1;
-    if(score.two > 20) {
     flash(PLAYER2COLOR);
+
+    newPlayer2Score = score.two + 1;
+    if (newPlayer2Score > 20) {
       score.two = 0;
+    } else {
+      score.two = newPlayer2Score;
     }
+
     meta.two.lastTime = Date.now();
     meta.two.resetCounter = 0;
   } else if (meta.two.reset) {
